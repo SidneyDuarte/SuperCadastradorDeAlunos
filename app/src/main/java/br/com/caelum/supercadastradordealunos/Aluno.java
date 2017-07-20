@@ -9,8 +9,8 @@ public class Aluno {
     private String telefone;
     private String endereco;
     private String site;
-    private int nota;
-
+    private Double nota;
+    private Long id;
 
     public String getNome() {
         return nome;
@@ -44,11 +44,19 @@ public class Aluno {
         this.site = site;
     }
 
-    public int getNota() {
+    public Double getNota() {
         return nota;
     }
 
-    public void setNota(int nota) {
+    public void setNota(Double nota) {
         this.nota = nota;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

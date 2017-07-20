@@ -47,7 +47,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
         botaoNovo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ListaAlunosActivity.this, CadastroAluno.class);
+                Intent intent = new Intent(ListaAlunosActivity.this, FormularioActivity.class);
                 startActivity(intent);
             }
         });
