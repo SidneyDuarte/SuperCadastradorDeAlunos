@@ -59,4 +59,9 @@ public class Aluno {
     public void setId(Long id) {
         this.id = id;
     }
+
+    @Override
+    public String toString(){
+        return this.nome;
+    }
 }

@@ -3,12 +3,18 @@ package br.com.caelum.supercadastradordealunos;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import java.util.List;
 
 public class ListaAlunosActivity extends AppCompatActivity {
     private ListView lista;
@@ -19,11 +25,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_alunos);
 
-        String[] alunos = {"Batman", "Mulher Maravilha", "Super Homem"};
         this.lista = (ListView)findViewById(R.id.lista);
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, alunos);
-        lista.setAdapter(adapter);
 
         lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -35,10 +37,8 @@ public class ListaAlunosActivity extends AppCompatActivity {
         lista.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String nome = adapterView.getItemAtPosition(i).toString();
-                Toast.makeText(ListaAlunosActivity.this, nome, Toast.LENGTH_LONG).show();
 
-                return true;
+                return false;
             }
         });
 
@@ -52,6 +52,40 @@ public class ListaAlunosActivity extends AppCompatActivity {
             }
         });
 
+        registerForContextMenu(lista);
+
+    }
+
+    @Override
+    protected  void onResume(){
+        super.onResume();
+        this.carregaLista();
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo){
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+        final Aluno aluno = (Aluno) lista.getItemAtPosition(info.position);
+        MenuItem excluir = menu.add("Excluir");
+        excluir.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                AlunoDao dao = new AlunoDao(ListaAlunosActivity.this);
+                dao.deletar(aluno);
+                dao.close();
+                carregaLista();
+                return true;
+            }
+        });
+    }
+
+    private void carregaLista(){
+        AlunoDao dao = new AlunoDao(this);
+        List<Aluno> alunos = dao.getLista();
+        dao.close();
+
+        ArrayAdapter<Aluno>adapter = new ArrayAdapter<Aluno>(this, android.R.layout.simple_list_item_1, alunos);
+        this.lista.setAdapter(adapter);
     }
 
 

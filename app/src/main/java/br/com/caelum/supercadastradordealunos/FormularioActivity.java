@@ -37,8 +37,11 @@ public class FormularioActivity extends AppCompatActivity{
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         if (item.getItemId() == R.id.menu_salvar){
+            AlunoDao alunoDao = new AlunoDao(this);
             Aluno aluno = formulario.getAluno();
-            Log.i("Nome do aluno", aluno.getNome());
+
+            alunoDao.insere(aluno);
+            alunoDao.close();
 
             finish();
             return true;
