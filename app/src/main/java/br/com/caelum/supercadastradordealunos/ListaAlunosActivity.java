@@ -1,6 +1,10 @@
 package br.com.caelum.supercadastradordealunos;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -15,10 +19,13 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.List;
+import java.util.jar.Manifest;
 
 public class ListaAlunosActivity extends AppCompatActivity {
     private ListView lista;
     private Button botaoNovo;
+    private final int REQUEST_LIGACAO = 123;
+    private Aluno aluno;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +36,11 @@ public class ListaAlunosActivity extends AppCompatActivity {
 
         lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(ListaAlunosActivity.this, "Item clicado na posição " + i, Toast.LENGTH_SHORT).show();
+            public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
+                Intent editar = new Intent(ListaAlunosActivity.this, FormularioActivity.class);
+                aluno = (Aluno) parent.getItemAtPosition(i);
+                editar.putExtra("aluno", aluno);
+                startActivity(editar);
             }
         });
 
@@ -65,8 +75,9 @@ public class ListaAlunosActivity extends AppCompatActivity {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo){
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
-        final Aluno aluno = (Aluno) lista.getItemAtPosition(info.position);
-        MenuItem excluir = menu.add("Excluir");
+        aluno = (Aluno) lista.getItemAtPosition(info.position);
+
+        MenuItem excluir = menu.add("excluir");
         excluir.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -77,6 +88,56 @@ public class ListaAlunosActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        MenuItem ligar = menu.add("ligar");
+        ligar.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                String permissaoLigar = android.Manifest.permission.CALL_PHONE;
+
+                if (ActivityCompat.checkSelfPermission(ListaAlunosActivity.this, permissaoLigar) == PackageManager.PERMISSION_GRANTED) {
+                    fazerLigacao();
+                }else{
+                    ActivityCompat.requestPermissions(ListaAlunosActivity.this, new String[]{permissaoLigar}, REQUEST_LIGACAO);
+                }
+                return false;
+            }
+        });
+
+        MenuItem sms = menu.add("SMS");
+        Intent enviarSMS = new Intent(Intent.ACTION_VIEW);
+        enviarSMS.setData(Uri.parse("sms:" + aluno.getTelefone()));
+        enviarSMS.putExtra("sms_body", "Sua nota é: " + aluno.getNota());
+        sms.setIntent(enviarSMS);
+
+        MenuItem mapa = menu.add("achar no mapa");
+        Intent abrirMapa = new Intent(Intent.ACTION_VIEW);
+        abrirMapa.setData(Uri.parse("geo:0,0?z=16&q="+Uri.encode(aluno.getEndereco())));
+        mapa.setIntent(abrirMapa);
+
+        MenuItem site = menu.add("abrir site");
+        Intent abrirSite = new Intent(Intent.ACTION_VIEW);
+        abrirSite.setData(Uri.parse("http://" + aluno.getSite()));
+        site.setIntent(abrirSite);
+
+
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] resutados) {
+        if (requestCode == REQUEST_LIGACAO){
+            if (resutados[0] == PackageManager.PERMISSION_GRANTED) {
+                fazerLigacao();
+            }else{
+                Toast.makeText(this, "Erro ao fazer ligação", Toast.LENGTH_SHORT);
+            }
+        }
+    }
+
+    @SuppressWarnings({"Missing Permissions"})
+    private void fazerLigacao(){
+        Intent ligar = new Intent(Intent.ACTION_CALL);
+        ligar.setData(Uri.parse("tel:" + aluno.getTelefone()));
+        startActivity(ligar);
     }
 
     private void carregaLista(){

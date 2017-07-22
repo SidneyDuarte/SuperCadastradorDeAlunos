@@ -41,4 +41,15 @@ public class FormularioHelper {
         return aluno;
     }
 
+    public void colocaAlunoNoFormulario(Aluno aluno){
+        campoNome.setText(aluno.getNome());
+        campoTelefone.setText(aluno.getTelefone());
+        campoEndereco.setText(aluno.getEndereco());
+        campoSite.setText(aluno.getSite());
+        campoNota.setRating(aluno.getNota().floatValue());
+
+        this.aluno = aluno;
+    }
+
+
 }

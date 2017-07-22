@@ -1,5 +1,6 @@
 package br.com.caelum.supercadastradordealunos;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -16,14 +17,21 @@ import android.widget.Toast;
 
 public class FormularioActivity extends AppCompatActivity{
 
-    private FormularioHelper formulario;
+    private FormularioHelper helper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_cadastro_alunos);
-        formulario = new FormularioHelper(this);
+        helper = new FormularioHelper(this);
+
+        Intent intent = getIntent();
+        Aluno aluno = (Aluno) intent.getSerializableExtra("aluno");
+
+        if (aluno != null) {
+            helper.colocaAlunoNoFormulario(aluno);
+        }
 
     }
 
@@ -38,9 +46,14 @@ public class FormularioActivity extends AppCompatActivity{
     public boolean onOptionsItemSelected(MenuItem item){
         if (item.getItemId() == R.id.menu_salvar){
             AlunoDao alunoDao = new AlunoDao(this);
-            Aluno aluno = formulario.getAluno();
+            Aluno aluno = helper.getAluno();
 
-            alunoDao.insere(aluno);
+            if (aluno.getId() == null) {
+                alunoDao.insere(aluno);
+            }else{
+                alunoDao.alterar(aluno);
+            }
+
             alunoDao.close();
 
             finish();

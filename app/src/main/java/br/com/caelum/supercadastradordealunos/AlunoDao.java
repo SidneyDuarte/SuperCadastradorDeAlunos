@@ -23,7 +23,7 @@ public class AlunoDao extends SQLiteOpenHelper{
     @Override
     public void onCreate(SQLiteDatabase db){
         String sql = "CREATE TABLE " + TABELA +
-                "(ID INTEGER PRIMARY KEY," +
+                "(ID INTEGER NOT NULL PRIMARY KEY," +
                 "nome TEXT NOT NULL," +
                 "telefone TEXT," +
                 "endereco TEXT," +
@@ -58,6 +58,7 @@ public class AlunoDao extends SQLiteOpenHelper{
 
         while(cursor.moveToNext()){
             Aluno aluno = new Aluno();
+
             aluno.setId(cursor.getLong(cursor.getColumnIndex("ID")));
             aluno.setNome(cursor.getString(cursor.getColumnIndex("nome")));
             aluno.setTelefone(cursor.getString(cursor.getColumnIndex("telefone")));
@@ -71,6 +72,19 @@ public class AlunoDao extends SQLiteOpenHelper{
         cursor.close();
         return alunos;
 
+    }
+
+    public void alterar(Aluno aluno) {
+        ContentValues values = new ContentValues();
+        values.put("nome", aluno.getNome());
+        values.put("telefone", aluno.getTelefone());
+        values.put("endereco", aluno.getEndereco());
+        values.put("site", aluno.getSite());
+        values.put("nota", aluno.getNota());
+
+        String[] args = {aluno.getId().toString()};
+
+        getWritableDatabase().update(TABELA, values, "ID = ?", args);
     }
 
     public void deletar(Aluno aluno){
