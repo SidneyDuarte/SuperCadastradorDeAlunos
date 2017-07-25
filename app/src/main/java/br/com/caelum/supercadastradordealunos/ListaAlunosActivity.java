@@ -122,6 +122,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
 
 
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] resutados) {
         if (requestCode == REQUEST_LIGACAO){
@@ -145,7 +146,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
         List<Aluno> alunos = dao.getLista();
         dao.close();
 
-        ArrayAdapter<Aluno>adapter = new ArrayAdapter<Aluno>(this, android.R.layout.simple_list_item_1, alunos);
+        ListaAlunosAdapter adapter = new ListaAlunosAdapter(alunos, this);
         this.lista.setAdapter(adapter);
     }
 

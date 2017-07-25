@@ -15,9 +15,10 @@ import java.util.List;
 
 public class AlunoDao extends SQLiteOpenHelper{
     private final String TABELA = "Aluno";
+    private static final int VERSAO = 2;
 
     public AlunoDao(Context contexto){
-        super(contexto, "CadastroAluno",null, 1);
+        super(contexto, "CadastroAluno",null, VERSAO);
     }
 
     @Override
@@ -35,9 +36,8 @@ public class AlunoDao extends SQLiteOpenHelper{
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int versaoAntiga, int versaoNova) {
-        String sql = "DROP TABLE " + TABELA + ";";
+        String sql = "ALTER TABLE " + TABELA + " ADD COLUMN caminhoFoto TEXT;";
         db.execSQL(sql);
-        onCreate(db);
     }
 
     public void insere(Aluno aluno){
@@ -47,6 +47,7 @@ public class AlunoDao extends SQLiteOpenHelper{
         values.put("endereco", aluno.getEndereco());
         values.put("site", aluno.getSite());
         values.put("nota", aluno.getNota());
+        values.put("caminhoFoto", aluno.getCaminhoFoto());
 
         getWritableDatabase().insert(TABELA, null, values);
     }
@@ -65,6 +66,7 @@ public class AlunoDao extends SQLiteOpenHelper{
             aluno.setEndereco(cursor.getString(cursor.getColumnIndex("endereco")));
             aluno.setSite(cursor.getString(cursor.getColumnIndex("site")));
             aluno.setNota(cursor.getDouble(cursor.getColumnIndex("nota")));
+            aluno.setCaminhoFoto(cursor.getString(cursor.getColumnIndex("caminhoFoto")));
 
             alunos.add(aluno);
         }
@@ -81,6 +83,7 @@ public class AlunoDao extends SQLiteOpenHelper{
         values.put("endereco", aluno.getEndereco());
         values.put("site", aluno.getSite());
         values.put("nota", aluno.getNota());
+        values.put("caminhoFoto", aluno.getCaminhoFoto());
 
         String[] args = {aluno.getId().toString()};
 

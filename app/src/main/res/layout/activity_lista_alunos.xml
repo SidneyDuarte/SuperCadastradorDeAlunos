@@ -21,4 +21,5 @@
         android:textColor="#FFF"
         android:elevation="8dp"
         android:id="@+id/novo"/>
+
 </RelativeLayout>
