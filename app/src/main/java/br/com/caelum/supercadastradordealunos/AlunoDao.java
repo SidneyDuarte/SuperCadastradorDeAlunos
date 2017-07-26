@@ -93,4 +93,12 @@ public class AlunoDao extends SQLiteOpenHelper{
     public void deletar(Aluno aluno){
         getWritableDatabase().delete(TABELA, "ID = ?", new String[] {aluno.getId().toString()});
     }
+
+    public boolean isAluno(String telefone){
+        Cursor cursor = getReadableDatabase().rawQuery("SELECT * FROM " + TABELA + " WHERE telefone = ?", new String[]{telefone});
+
+        int qtd = cursor.getCount();
+
+        return qtd > 0;
+    }
 }

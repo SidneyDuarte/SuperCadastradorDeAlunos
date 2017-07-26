@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Adapter;
@@ -26,6 +27,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
     private Button botaoNovo;
     private final int REQUEST_LIGACAO = 123;
     private Aluno aluno;
+    private List<Aluno> alunos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +65,6 @@ public class ListaAlunosActivity extends AppCompatActivity {
         });
 
         registerForContextMenu(lista);
-
     }
 
     @Override
@@ -143,12 +144,28 @@ public class ListaAlunosActivity extends AppCompatActivity {
 
     private void carregaLista(){
         AlunoDao dao = new AlunoDao(this);
-        List<Aluno> alunos = dao.getLista();
+        this.alunos = dao.getLista();
         dao.close();
 
         ListaAlunosAdapter adapter = new ListaAlunosAdapter(alunos, this);
         this.lista.setAdapter(adapter);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_lista, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.botao_enviar) {
+            new EnviaAlunosTask(this).execute();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
 }
