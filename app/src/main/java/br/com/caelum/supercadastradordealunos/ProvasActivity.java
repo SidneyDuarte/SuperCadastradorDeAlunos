@@ -1,6 +1,7 @@
 package br.com.caelum.supercadastradordealunos;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
@@ -29,6 +30,24 @@ public class ProvasActivity extends AppCompatActivity {
 
     public boolean isTablet(){
         return getResources().getBoolean(R.bool.isTablet);
+    }
+
+    public void selecionarProva(Prova prova){
+        FragmentManager manager = getSupportFragmentManager();
+
+        if (isTablet()) {
+            DetalhesProvaFragment fragment = (DetalhesProvaFragment) manager.findFragmentById(R.id.prova_detalhes);
+            fragment.popularCampos(prova);
+        }else{
+            FragmentTransaction transaction = manager.beginTransaction();
+            DetalhesProvaFragment fragment = new DetalhesProvaFragment();
+            Bundle args = new Bundle();
+            args.putSerializable("prova", prova);
+            fragment.setArguments(args);
+            transaction.replace(R.id.prova_view, fragment);
+
+            transaction.commit();
+        }
     }
 }
 

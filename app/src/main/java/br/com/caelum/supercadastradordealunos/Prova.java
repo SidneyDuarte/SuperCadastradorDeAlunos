@@ -1,12 +1,13 @@
 package br.com.caelum.supercadastradordealunos;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by android6920 on 26/07/17.
  */
 
-public class Prova {
+public class Prova implements Serializable{
     private String materia;
     private String data;
     private List<String> topicos;
