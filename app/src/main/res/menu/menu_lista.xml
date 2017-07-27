@@ -6,4 +6,10 @@
         android:id="@+id/botao_enviar"
         app:showAsAction="always"
         android:icon="@drawable/ic_enviar" />
+    <item
+        android:title="Provas"
+        android:id="@+id/botao_provas"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_receber" />
+
 </menu>

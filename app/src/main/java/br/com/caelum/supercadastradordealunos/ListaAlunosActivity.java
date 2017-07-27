@@ -121,7 +121,6 @@ public class ListaAlunosActivity extends AppCompatActivity {
         abrirSite.setData(Uri.parse("http://" + aluno.getSite()));
         site.setIntent(abrirSite);
 
-
     }
 
     @Override
@@ -163,9 +162,15 @@ public class ListaAlunosActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.botao_enviar) {
             new EnviaAlunosTask(this).execute();
             return true;
+        }else if (item.getItemId() == R.id.botao_provas) {
+            Intent intent = new Intent(this, ProvasActivity.class);
+            startActivity(intent);
+
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
 
 }
