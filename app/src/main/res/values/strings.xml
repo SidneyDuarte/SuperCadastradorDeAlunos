@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">SuperCadastradorDeAlunos</string>
+    <string name="title_activity_mostra_alunos">MapaDoMaroto</string>
 </resources>

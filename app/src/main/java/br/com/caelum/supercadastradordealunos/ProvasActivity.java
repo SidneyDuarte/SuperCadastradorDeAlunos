@@ -45,7 +45,7 @@ public class ProvasActivity extends AppCompatActivity {
             args.putSerializable("prova", prova);
             fragment.setArguments(args);
             transaction.replace(R.id.prova_view, fragment);
-
+            transaction.addToBackStack(null);
             transaction.commit();
         }
     }

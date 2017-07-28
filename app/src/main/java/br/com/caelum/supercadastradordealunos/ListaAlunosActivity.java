@@ -112,9 +112,15 @@ public class ListaAlunosActivity extends AppCompatActivity {
         sms.setIntent(enviarSMS);
 
         MenuItem mapa = menu.add("achar no mapa");
-        Intent abrirMapa = new Intent(Intent.ACTION_VIEW);
-        abrirMapa.setData(Uri.parse("geo:0,0?z=16&q="+Uri.encode(aluno.getEndereco())));
-        mapa.setIntent(abrirMapa);
+        mapa.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                Intent abrirMapa = new Intent(ListaAlunosActivity.this, MostraAlunosActivity.class);
+                startActivity(abrirMapa);
+
+                return false;
+            }
+        });
 
         MenuItem site = menu.add("abrir site");
         Intent abrirSite = new Intent(Intent.ACTION_VIEW);
